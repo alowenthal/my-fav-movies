@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from "react";
-import "./App.css";
+import React, { useState } from "react";
+
+import MovieSearch from "./components/MovieSearch";
+import MovieList from "./components/MovieList";
 
 function App() {
-    useEffect(() => {});
-
     function addMovie(query) {
         fetch(`http://www.omdbapi.com/?t=${query}&apikey=bdf0ef4e`)
             .then((response) => {
@@ -12,7 +12,8 @@ function App() {
             .then((data) => {
                 const movieInfo = {
                     title: data.Title,
-                    id: data.imdbID
+                    id: data.imdbID,
+                    poster: data.Poster
                 };
 
                 setList((prevState) => [...prevState, movieInfo]);
@@ -37,31 +38,12 @@ function App() {
 
     return (
         <div className="App">
-            <input
-                onChange={(event) => setQuery(event.target.value)}
-                name="username"
-                type="text"
-                placeholder="Enter a movie..."
+            <MovieSearch
+                addMovie={addMovie}
+                query={query}
+                setQuery={setQuery}
             />
-            <button onClick={() => addMovie(query)} type="button">
-                Add To List
-            </button>
-
-            <ul className="movies">
-                {myList.map((movie) => {
-                    return (
-                        <li className="movie" key={`movie--${movie.id}`}>
-                            {movie.title}
-                            <button
-                                onClick={() => removeMovie(movie.id)}
-                                type="button"
-                            >
-                                Remove
-                            </button>
-                        </li>
-                    );
-                })}
-            </ul>
+            <MovieList list={myList} removeMovie={removeMovie} />
         </div>
     );
 }
