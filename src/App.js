@@ -5,7 +5,7 @@ import MovieList from "./components/MovieList";
 
 function App() {
     function addMovie(query) {
-        fetch(`http://www.omdbapi.com/?t=${query}&apikey=bdf0ef4e`)
+        fetch(`https://www.omdbapi.com/?t=${query}&apikey=bdf0ef4e`)
             .then((response) => {
                 return response.json();
             })
