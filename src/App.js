@@ -13,10 +13,14 @@ function App() {
                 const movieInfo = {
                     title: data.Title,
                     id: data.imdbID,
-                    poster: data.Poster
+                    poster: data.Poster,
+                    actors: data.Actors.split(", ")
                 };
 
                 setList((prevState) => [...prevState, movieInfo]);
+                setActors((prevState) =>
+                    tallyActors(prevState, movieInfo.actors)
+                );
             });
     }
 
@@ -33,8 +37,24 @@ function App() {
         setList([...myList]);
     }
 
+    function tallyActors(currentActors, newActors) {
+        const newCurrentActors = [...currentActors];
+
+        newActors.forEach((actor) => {
+            const actorInfo = {
+                actor,
+                tally: 1
+            };
+
+            newCurrentActors.push(actorInfo);
+        });
+
+        return newCurrentActors;
+    }
+
     const [query, setQuery] = useState("");
     const [myList, setList] = useState([]);
+    const [actors, setActors] = useState([]);
 
     return (
         <div className="App">

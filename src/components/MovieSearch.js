@@ -16,6 +16,7 @@ const SearchInput = styled.input`
     border: none;
     border-radius: 4px;
     margin-right: 1rem;
+    width: 400px;
 `;
 
 function MovieSearch({ query, setQuery, addMovie }) {
@@ -26,6 +27,7 @@ function MovieSearch({ query, setQuery, addMovie }) {
                 name="username"
                 type="text"
                 placeholder="Enter a movie..."
+                data-lpignore="true"
             />
             <Button
                 text="Add to List"
@@ -33,6 +35,7 @@ function MovieSearch({ query, setQuery, addMovie }) {
                 query={query}
                 bgColor="#333333"
                 textColor="#FFFFFF"
+                isDisabled={query === ""}
             />
         </Header>
     );
