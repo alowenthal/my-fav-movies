@@ -63,7 +63,12 @@ function App() {
                 query={query}
                 setQuery={setQuery}
             />
-            <MovieColumn list={myList} removeMovie={removeMovie} />
+            <MovieColumn
+                list={myList}
+                removeMovie={removeMovie}
+                myList={myList}
+                setList={setList}
+            />
         </div>
     );
 }

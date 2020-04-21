@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-props-no-spreading */
 import React from "react";
 import styled from "styled-components";
 import PropTypes from "prop-types";
@@ -9,6 +10,7 @@ const MovieItem = styled.div`
     display: grid;
     grid-template-columns: 40px 100px auto 200px;
     align-items: center;
+    background: #ffffff;
 
     img {
         max-height: 100px;
@@ -23,7 +25,7 @@ function Movie({ movie, index, removeMovie }) {
                     key={`movie--${movie.id}`}
                     {...provided.draggableProps}
                     {...provided.dragHandleProps}
-                    innerRef={provided.innerRef}
+                    ref={provided.innerRef}
                 >
                     <span className="movie__position">{index + 1}</span>
                     <img
