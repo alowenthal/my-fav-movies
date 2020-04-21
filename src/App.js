@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
 import MovieSearch from "./components/MovieSearch";
-import MovieList from "./components/MovieList";
+import MovieColumn from "./components/MovieColumn";
 
 function App() {
     function addMovie(query) {
@@ -63,7 +63,7 @@ function App() {
                 query={query}
                 setQuery={setQuery}
             />
-            <MovieList list={myList} removeMovie={removeMovie} />
+            <MovieColumn list={myList} removeMovie={removeMovie} />
         </div>
     );
 }
