@@ -11,7 +11,7 @@ const MovieList = styled.div`
     padding: 0px;
 `;
 
-function MovieColumn({ list, removeMovie, myList, setList }) {
+function MovieColumn({ removeMovie, myList, setList }) {
     function onDragEnd(result) {
         const { destination, source, draggableId } = result;
 
@@ -30,10 +30,9 @@ function MovieColumn({ list, removeMovie, myList, setList }) {
         const updatedList = myList;
 
         updatedList.splice(source.index, 1);
-        updatedList.splice(destination.index, 0, draggableId);
+        updatedList.splice(destination.index, 0, JSON.parse(draggableId));
 
-        console.log("original list", myList);
-        console.log("new list", updatedList);
+        setList([...updatedList]);
     }
 
     return (
@@ -44,7 +43,7 @@ function MovieColumn({ list, removeMovie, myList, setList }) {
                         ref={provided.innerRef}
                         {...provided.droppableProps}
                     >
-                        {list.map((movie, index) => (
+                        {myList.map((movie, index) => (
                             <Movie
                                 movie={movie}
                                 index={index}
@@ -61,7 +60,8 @@ function MovieColumn({ list, removeMovie, myList, setList }) {
 }
 
 MovieColumn.propTypes = {
-    list: PropTypes.array,
+    myList: PropTypes.array,
+    setList: PropTypes.func,
     removeMovie: PropTypes.func
 };
 

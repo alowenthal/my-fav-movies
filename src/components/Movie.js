@@ -19,7 +19,7 @@ const MovieItem = styled.div`
 
 function Movie({ movie, index, removeMovie }) {
     return (
-        <Draggable draggableId={movie.id} index={index}>
+        <Draggable draggableId={JSON.stringify(movie)} index={index}>
             {(provided) => (
                 <MovieItem
                     key={`movie--${movie.id}`}

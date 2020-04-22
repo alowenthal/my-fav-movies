@@ -2,6 +2,10 @@ import React, { useState } from "react";
 
 import MovieSearch from "./components/MovieSearch";
 import MovieColumn from "./components/MovieColumn";
+import { testData } from "./TestData/testList.js";
+
+// Should only be true for DEV purposes
+const isTestMode = false;
 
 function App() {
     function addMovie(query) {
@@ -25,11 +29,13 @@ function App() {
     }
 
     function removeMovie(id) {
-        const removeIndex = myList
-            .map((item) => {
-                return item.id;
-            })
-            .indexOf(id);
+        const removeIndex = isTestMode
+            ? testData
+            : myList
+                  .map((item) => {
+                      return item.id;
+                  })
+                  .indexOf(id);
 
         // remove object
         myList.splice(removeIndex, 1);
@@ -53,7 +59,7 @@ function App() {
     }
 
     const [query, setQuery] = useState("");
-    const [myList, setList] = useState([]);
+    const [myList, setList] = useState(isTestMode ? [...testData] : []);
     const [actors, setActors] = useState([]);
 
     return (
@@ -64,7 +70,6 @@ function App() {
                 setQuery={setQuery}
             />
             <MovieColumn
-                list={myList}
                 removeMovie={removeMovie}
                 myList={myList}
                 setList={setList}
