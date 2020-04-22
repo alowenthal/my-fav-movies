@@ -48,7 +48,7 @@ function MovieColumn({ removeMovie, myList, setList }) {
                                 movie={movie}
                                 index={index}
                                 removeMovie={removeMovie}
-                                key={`movie--${index}`}
+                                key={JSON.stringify(movie)}
                             />
                         ))}
                         {provided.placeholder}
