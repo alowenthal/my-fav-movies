@@ -23,7 +23,7 @@ function App() {
 
                 setList((prevState) => [...prevState, movieInfo]);
                 setActors((prevState) =>
-                    tallyActors(prevState, movieInfo.actors)
+                    tallyActors(prevState, movieInfo.actors, movieInfo.id)
                 );
             });
     }
@@ -43,16 +43,29 @@ function App() {
         setList([...myList]);
     }
 
-    function tallyActors(currentActors, newActors) {
+    function tallyActors(currentActors, newActors, id) {
         const newCurrentActors = [...currentActors];
 
         newActors.forEach((actor) => {
-            const actorInfo = {
-                actor,
-                tally: 1
-            };
+            const actorExists = currentActors.find(
+                (cActor) => cActor.actor === actor
+            );
 
-            newCurrentActors.push(actorInfo);
+            let actorInfo;
+
+            if (actorExists) {
+                actorInfo = {
+                    actor,
+                    movies: actorExists.movies.push(id)
+                };
+            } else {
+                actorInfo = {
+                    actor,
+                    movies: [id]
+                };
+
+                newCurrentActors.push(actorInfo);
+            }
         });
 
         return newCurrentActors;
