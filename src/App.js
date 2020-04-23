@@ -58,7 +58,10 @@ function App() {
             if (actorExists) {
                 actorInfo = {
                     actor,
-                    movies: actorExists.movies.push(id)
+                    movies:
+                        actorExists.movies.indexOf(id) === -1
+                            ? actorExists.movies.push(id)
+                            : console.log("This item already exists")
                 };
             } else {
                 actorInfo = {
