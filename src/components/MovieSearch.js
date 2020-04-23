@@ -20,6 +20,12 @@ const SearchInput = styled.input`
 `;
 
 function MovieSearch({ query, setQuery, addMovie }) {
+    function keyPress(e) {
+        if (e.keyCode === 13) {
+            addMovie(e.target.value);
+        }
+    }
+
     return (
         <Header>
             <SearchInput
@@ -28,6 +34,8 @@ function MovieSearch({ query, setQuery, addMovie }) {
                 type="text"
                 placeholder="Enter a movie..."
                 data-lpignore="true"
+                value={query}
+                onKeyDown={keyPress}
             />
             <Button
                 text="Add to List"

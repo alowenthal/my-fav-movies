@@ -25,6 +25,8 @@ function App() {
                 setActors((prevState) =>
                     tallyActors(prevState, movieInfo.actors, movieInfo.id)
                 );
+
+                setQuery("");
             });
     }
 
