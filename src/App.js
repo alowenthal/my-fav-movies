@@ -8,8 +8,19 @@ import { testData } from "./TestData/testList.js";
 const isTestMode = false;
 
 function App() {
-    function addMovie(query) {
-        fetch(`https://www.omdbapi.com/?t=${query}&apikey=bdf0ef4e`)
+    const [query, setQuery] = useState("");
+    const [myList, setList] = useState(isTestMode ? [...testData] : []);
+    const [actors, setActors] = useState({});
+
+    const actorsArr = Object.keys(actors).map((actor) => {
+        return {
+            actor,
+            movies: actors[actor]
+        };
+    });
+
+    function addMovie(searchQuery) {
+        fetch(`https://www.omdbapi.com/?t=${searchQuery}&apikey=bdf0ef4e`)
             .then((response) => {
                 return response.json();
             })
@@ -21,11 +32,14 @@ function App() {
                     actors: data.Actors.split(", ")
                 };
 
-                setList((prevState) => [...prevState, movieInfo]);
-                setActors((prevState) =>
-                    tallyActors(prevState, movieInfo.actors, movieInfo.id)
+                const updatedActors = tallyActors(
+                    actors,
+                    movieInfo.actors,
+                    movieInfo.id
                 );
 
+                setList((prevState) => [...prevState, movieInfo]);
+                setActors(updatedActors);
                 setQuery("");
             });
     }
@@ -46,39 +60,14 @@ function App() {
     }
 
     function tallyActors(currentActors, newActors, id) {
-        const newCurrentActors = [...currentActors];
-
         newActors.forEach((actor) => {
-            const actorExists = currentActors.find(
-                (cActor) => cActor.actor === actor
-            );
-
-            let actorInfo;
-
-            if (actorExists) {
-                actorInfo = {
-                    actor,
-                    movies:
-                        actorExists.movies.indexOf(id) === -1
-                            ? actorExists.movies.push(id)
-                            : console.log("This item already exists")
-                };
-            } else {
-                actorInfo = {
-                    actor,
-                    movies: [id]
-                };
-
-                newCurrentActors.push(actorInfo);
-            }
+            const movies = currentActors[actor] || [];
+            movies.push(id);
+            currentActors[actor] = movies;
         });
 
-        return newCurrentActors;
+        return currentActors;
     }
-
-    const [query, setQuery] = useState("");
-    const [myList, setList] = useState(isTestMode ? [...testData] : []);
-    const [actors, setActors] = useState([]);
 
     return (
         <div className="App">
