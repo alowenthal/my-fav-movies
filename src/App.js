@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import axios from "axios";
 
 import MovieSearch from "./components/MovieSearch";
 import MovieColumn from "./components/MovieColumn";
@@ -20,16 +21,24 @@ function App() {
     });
 
     function addMovie(searchQuery) {
-        fetch(`https://www.omdbapi.com/?t=${searchQuery}&apikey=bdf0ef4e`)
+        axios({
+            method: "GET",
+            url: `https://imdb8.p.rapidapi.com/title/find?q=${searchQuery}`,
+            headers: {
+                "content-type": "application/octet-stream",
+                "x-rapidapi-host": "imdb8.p.rapidapi.com",
+                "x-rapidapi-key": process.env.REACT_APP_API_KEY
+            },
+            params: {
+                language_code: "en"
+            }
+        })
             .then((response) => {
-                return response.json();
-            })
-            .then((data) => {
                 const movieInfo = {
-                    title: data.Title,
-                    id: data.imdbID,
-                    poster: data.Poster,
-                    actors: data.Actors.split(", ")
+                    title: response.data.results[0].title,
+                    id: response.data.results[0].id,
+                    poster: response.data.results[0].image.url,
+                    actors: response.data.results[0].principals
                 };
 
                 const updatedActors = tallyActors(
@@ -41,6 +50,9 @@ function App() {
                 setList((prevState) => [...prevState, movieInfo]);
                 setActors(updatedActors);
                 setQuery("");
+            })
+            .catch((error) => {
+                console.log(error);
             });
     }
 
@@ -57,17 +69,29 @@ function App() {
         myList.splice(removeIndex, 1);
 
         setList([...myList]);
+
+        // unTallyActors();
     }
 
     function tallyActors(currentActors, newActors, id) {
         newActors.forEach((actor) => {
-            const movies = currentActors[actor] || [];
+            const movies = currentActors[actor.name] || [];
             movies.push(id);
-            currentActors[actor] = movies;
+            currentActors[actor.name] = movies;
         });
 
         return currentActors;
     }
+
+    // function unTallyActors(currentActors, actorsToRemove) {
+    //     actorsToRemove.forEach((actor) => {
+    //         const movies = currentActors[actor] || [];
+    //         console.log("***", movies);
+    //         // currentActors[actor] = movies;
+    //     });
+
+    //     return currentActors;
+    // }
 
     return (
         <div className="App">
