@@ -39,5 +39,33 @@
       To begin the development, run `npm start` or `yarn start`.
       To create a production bundle, use `npm run build` or `yarn build`.
     -->
+    <!-- The core Firebase JS SDK is always required and must be listed first -->
+<script src="https://www.gstatic.com/firebasejs/7.14.2/firebase-app.js"></script>
+
+<!-- TODO: Add SDKs for Firebase products that you want to use
+     https://firebase.google.com/docs/web/setup#available-libraries -->
+<script src="https://www.gstatic.com/firebasejs/7.14.2/firebase-analytics.js"></script>
+
+<!-- Add Firebase products that you want to use -->
+<script src="https://www.gstatic.com/firebasejs/7.14.2/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.14.2/firebase-firestore.js"></script>
+
+<script>
+  // Your web app's Firebase configuration
+  var firebaseConfig = {
+    apiKey: "AIzaSyCE0z9bGCC5Hi8NJAak7fz5lKw0g7Y-ATc",
+    authDomain: "favorite-movies-d9691.firebaseapp.com",
+    databaseURL: "https://favorite-movies-d9691.firebaseio.com",
+    projectId: "favorite-movies-d9691",
+    storageBucket: "favorite-movies-d9691.appspot.com",
+    messagingSenderId: "488869818769",
+    appId: "1:488869818769:web:77bea72edf15625ef3ea30",
+    measurementId: "G-3RXFZ9KY0F"
+  };
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  firebase.analytics();
+  firebase.auth();
+</script>
   </body>
 </html>
