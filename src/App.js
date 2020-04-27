@@ -3,7 +3,7 @@ import axios from "axios";
 
 import MovieSearch from "./components/MovieSearch";
 import MovieColumn from "./components/MovieColumn";
-import { testData } from "./TestData/testList.js";
+import { testData, testActors } from "./TestData/testList.js";
 
 // Should only be true for DEV purposes
 const isTestMode = false;
@@ -11,7 +11,7 @@ const isTestMode = false;
 function App() {
     const [query, setQuery] = useState("");
     const [myList, setList] = useState(isTestMode ? [...testData] : []);
-    const [actors, setActors] = useState({});
+    const [actors, setActors] = useState(isTestMode ? { ...testActors } : {});
 
     const actorsArr = Object.keys(actors).map((actor) => {
         return {
@@ -56,7 +56,7 @@ function App() {
             });
     }
 
-    function removeMovie(id) {
+    function removeMovie(id, removedActors) {
         const removeIndex = isTestMode
             ? testData
             : myList
@@ -68,9 +68,10 @@ function App() {
         // remove object
         myList.splice(removeIndex, 1);
 
-        setList([...myList]);
+        const updatedActors = unTallyActors(actors, removedActors, id);
 
-        // unTallyActors();
+        setList([...myList]);
+        setActors(updatedActors);
     }
 
     function tallyActors(currentActors, newActors, id) {
@@ -83,15 +84,19 @@ function App() {
         return currentActors;
     }
 
-    // function unTallyActors(currentActors, actorsToRemove) {
-    //     actorsToRemove.forEach((actor) => {
-    //         const movies = currentActors[actor] || [];
-    //         console.log("***", movies);
-    //         // currentActors[actor] = movies;
-    //     });
+    function unTallyActors(currentActors, removedActors, id) {
+        removedActors.forEach((actor) => {
+            const movies = currentActors[actor.name];
+            movies.splice(movies.indexOf(id), 1);
+            if (movies.length < 1) {
+                delete currentActors[actor.name];
+                return currentActors;
+            }
+            currentActors[actor.name] = movies;
+        });
 
-    //     return currentActors;
-    // }
+        return currentActors;
+    }
 
     return (
         <div className="App">

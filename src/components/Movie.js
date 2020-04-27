@@ -34,7 +34,10 @@ function Movie({ movie, index, removeMovie }) {
                         alt={`${movie.title} Poster`}
                     />
                     <span className="movie__title">{movie.title}</span>
-                    <button onClick={() => removeMovie(movie.id)} type="button">
+                    <button
+                        onClick={() => removeMovie(movie.id, movie.actors)}
+                        type="button"
+                    >
                         Remove
                     </button>
                 </MovieItem>
