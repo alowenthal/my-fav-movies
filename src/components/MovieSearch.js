@@ -3,6 +3,7 @@ import styled from "styled-components";
 import PropTypes from "prop-types";
 
 import Button from "./Button";
+import Login from "./Login";
 
 const Header = styled.div`
     padding: 1rem;
@@ -16,7 +17,9 @@ const SearchInput = styled.input`
     border: none;
     border-radius: 4px;
     margin-right: 1rem;
-    width: 400px;
+    width: calc(100% - 2rem);
+    margin-bottom: 1rem;
+    max-width: 400px;
 `;
 
 function MovieSearch({ query, setQuery, addMovie }) {
@@ -25,7 +28,6 @@ function MovieSearch({ query, setQuery, addMovie }) {
             addMovie(e.target.value);
         }
     }
-
     return (
         <Header>
             <SearchInput
