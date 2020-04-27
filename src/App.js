@@ -1,5 +1,7 @@
-import React, { useState } from "react";
+/* eslint-disable no-nested-ternary */
+import React, { useState, useEffect } from "react";
 import axios from "axios";
+import useLocalStorage from "react-use-localstorage";
 
 import MovieSearch from "./components/MovieSearch";
 import MovieColumn from "./components/MovieColumn";
@@ -10,8 +12,24 @@ const isTestMode = false;
 
 function App() {
     const [query, setQuery] = useState("");
-    const [myList, setList] = useState(isTestMode ? [...testData] : []);
-    const [actors, setActors] = useState(isTestMode ? { ...testActors } : {});
+    const [lsList, setlsList] = useLocalStorage("myList", "");
+    const [lsActors, setlsActors] = useLocalStorage("actors", "");
+
+    const [myList, setList] = useState(
+        isTestMode ? [...testData] : lsList ? [...JSON.parse(lsList)] : []
+    );
+    const [actors, setActors] = useState(
+        isTestMode
+            ? { ...testActors }
+            : lsActors
+            ? { ...JSON.parse(lsActors) }
+            : {}
+    );
+
+    useEffect(() => {
+        setlsList(JSON.stringify(myList));
+        setlsActors(JSON.stringify(actors));
+    }, [myList]);
 
     const actorsArr = Object.keys(actors).map((actor) => {
         return {
