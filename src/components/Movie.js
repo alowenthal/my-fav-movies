@@ -5,6 +5,7 @@ import PropTypes from "prop-types";
 import { Draggable } from "react-beautiful-dnd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
+import { isMobile } from "react-device-detect";
 
 import Button from "./Button";
 
@@ -12,7 +13,9 @@ const MovieItem = styled.div`
     padding: 1rem;
     border-bottom: 1px solid #222222;
     display: grid;
-    grid-template-columns: 100px 100px auto 200px;
+    grid-template-columns: ${isMobile
+        ? `30px 86px auto 30px`
+        : `100px 100px auto 100px`};
     align-items: center;
 
     img {
@@ -26,13 +29,13 @@ const MovieItem = styled.div`
 
 const MovieNum = styled.span`
     color: #222222;
-    font-size: 72px;
+    font-size: ${isMobile ? `32px` : `72px`};
     font-weight: 800;
 `;
 
 const MovieTitle = styled.span`
     color: #ffffff;
-    font-size: 32px;
+    font-size: ${isMobile ? `16px` : `32px`};
     font-weight: 600;
 `;
 

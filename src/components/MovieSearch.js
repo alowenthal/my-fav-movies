@@ -3,9 +3,8 @@ import styled from "styled-components";
 import PropTypes from "prop-types";
 
 import Button from "./Button";
-import Login from "./Login";
 
-const Header = styled.div`
+const SearchContainer = styled.div`
     padding: 1rem;
     background: #e91e63;
 `;
@@ -29,7 +28,7 @@ function MovieSearch({ query, setQuery, addMovie }) {
         }
     }
     return (
-        <Header>
+        <SearchContainer>
             <SearchInput
                 onChange={(event) => setQuery(event.target.value)}
                 name="username"
@@ -47,7 +46,7 @@ function MovieSearch({ query, setQuery, addMovie }) {
                 textColor="#FFFFFF"
                 isDisabled={query === ""}
             />
-        </Header>
+        </SearchContainer>
     );
 }
 

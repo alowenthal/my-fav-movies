@@ -4,6 +4,7 @@ import styled from "styled-components";
 import PropTypes from "prop-types";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
 
+import MovieSearch from "./MovieSearch";
 import Movie from "./Movie";
 
 const MovieList = styled.div`
@@ -11,7 +12,14 @@ const MovieList = styled.div`
     padding: 0px;
 `;
 
-function MovieColumn({ removeMovie, myList, setList }) {
+function MovieColumn({
+    addMovie,
+    query,
+    setQuery,
+    removeMovie,
+    myList,
+    setList
+}) {
     function onDragEnd(result) {
         const { destination, source, draggableId } = result;
 
@@ -36,30 +44,40 @@ function MovieColumn({ removeMovie, myList, setList }) {
     }
 
     return (
-        <DragDropContext onDragEnd={onDragEnd}>
-            <Droppable droppableId="movie-list">
-                {(provided) => (
-                    <MovieList
-                        ref={provided.innerRef}
-                        {...provided.droppableProps}
-                    >
-                        {myList.map((movie, index) => (
-                            <Movie
-                                movie={movie}
-                                index={index}
-                                removeMovie={removeMovie}
-                                key={JSON.stringify(movie)}
-                            />
-                        ))}
-                        {provided.placeholder}
-                    </MovieList>
-                )}
-            </Droppable>
-        </DragDropContext>
+        <>
+            <MovieSearch
+                addMovie={addMovie}
+                query={query}
+                setQuery={setQuery}
+            />
+            <DragDropContext onDragEnd={onDragEnd}>
+                <Droppable droppableId="movie-list">
+                    {(provided) => (
+                        <MovieList
+                            ref={provided.innerRef}
+                            {...provided.droppableProps}
+                        >
+                            {myList.map((movie, index) => (
+                                <Movie
+                                    movie={movie}
+                                    index={index}
+                                    removeMovie={removeMovie}
+                                    key={JSON.stringify(movie)}
+                                />
+                            ))}
+                            {provided.placeholder}
+                        </MovieList>
+                    )}
+                </Droppable>
+            </DragDropContext>
+        </>
     );
 }
 
 MovieColumn.propTypes = {
+    addMovie: PropTypes.func,
+    query: PropTypes.string,
+    setQuery: PropTypes.func,
     myList: PropTypes.array,
     setList: PropTypes.func,
     removeMovie: PropTypes.func

@@ -2,10 +2,13 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import useLocalStorage from "react-use-localstorage";
+import { Router } from "@reach/router";
 
-import MovieSearch from "./components/MovieSearch";
+import Navigation from "./components/Navigation";
 import MovieColumn from "./components/MovieColumn";
 import { testData, testActors } from "./TestData/testList.js";
+
+import Button from "./components/Button";
 
 // Should only be true for DEV purposes
 const isTestMode = false;
@@ -118,16 +121,19 @@ function App() {
 
     return (
         <div className="App">
-            <MovieSearch
-                addMovie={addMovie}
-                query={query}
-                setQuery={setQuery}
-            />
-            <MovieColumn
-                removeMovie={removeMovie}
-                myList={myList}
-                setList={setList}
-            />
+            <Navigation />
+            <Router>
+                <MovieColumn
+                    addMovie={addMovie}
+                    query={query}
+                    setQuery={setQuery}
+                    removeMovie={removeMovie}
+                    myList={myList}
+                    setList={setList}
+                    path="/"
+                />
+                <Button path="to-watch" />
+            </Router>
         </div>
     );
 }
