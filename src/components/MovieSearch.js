@@ -41,7 +41,7 @@ function MovieSearch({ query, setQuery, addMovie }) {
             />
             <Button
                 text="Add to List"
-                func={addMovie}
+                func={() => addMovie(query)}
                 query={query}
                 bgColor="#333333"
                 textColor="#FFFFFF"

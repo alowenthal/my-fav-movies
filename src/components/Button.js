@@ -2,9 +2,18 @@ import React from "react";
 import styled from "styled-components";
 import PropTypes from "prop-types";
 
-function Button({ text, func, bgColor, textColor, query, isDisabled }) {
+function Button({
+    text,
+    func,
+    bgColor,
+    borderColor,
+    textColor,
+    query,
+    isDisabled
+}) {
     const Btn = styled.button`
         background: ${bgColor};
+        border: 1px solid ${borderColor} !important;
         color: ${textColor};
         padding: 1rem;
         border-radius: 4px;
@@ -18,7 +27,7 @@ function Button({ text, func, bgColor, textColor, query, isDisabled }) {
     `;
 
     return (
-        <Btn onClick={() => func(query)} type="button" disabled={isDisabled}>
+        <Btn onClick={func} type="button" disabled={isDisabled}>
             {text}
         </Btn>
     );
@@ -27,6 +36,7 @@ function Button({ text, func, bgColor, textColor, query, isDisabled }) {
 Button.propTypes = {
     text: PropTypes.string,
     bgColor: PropTypes.string,
+    borderColor: PropTypes.string,
     textColor: PropTypes.string,
     func: PropTypes.func,
     query: PropTypes.string,
