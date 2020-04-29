@@ -18,7 +18,8 @@ function MovieColumn({
     setQuery,
     removeMovie,
     myList,
-    setList
+    setList,
+    queryResults
 }) {
     function onDragEnd(result) {
         const { destination, source, draggableId } = result;
@@ -49,6 +50,7 @@ function MovieColumn({
                 addMovie={addMovie}
                 query={query}
                 setQuery={setQuery}
+                queryResults={queryResults}
             />
             <DragDropContext onDragEnd={onDragEnd}>
                 <Droppable droppableId="movie-list">

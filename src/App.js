@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import useLocalStorage from "react-use-localstorage";
 import { Router } from "@reach/router";
+import _, { debounce } from "lodash";
 
 import Navigation from "./components/Navigation";
 import MovieColumn from "./components/MovieColumn";
@@ -14,7 +15,7 @@ import Button from "./components/Button";
 const isTestMode = false;
 
 function App() {
-    const [query, setQuery] = useState("");
+    const [queryResults, setQueryResults] = useState([]);
     const [lsList, setlsList] = useLocalStorage("myList", "");
     const [lsActors, setlsActors] = useLocalStorage("actors", "");
 
@@ -41,40 +42,41 @@ function App() {
         };
     });
 
-    function addMovie(searchQuery) {
+    function setQuery(query) {
         axios({
             method: "GET",
-            url: `https://imdb8.p.rapidapi.com/title/find?q=${searchQuery}`,
+            url: `https://imdb8.p.rapidapi.com/title/find?q=${query}`,
             headers: {
                 "content-type": "application/octet-stream",
                 "x-rapidapi-host": "imdb8.p.rapidapi.com",
                 "x-rapidapi-key": process.env.REACT_APP_API_KEY
-            },
-            params: {
-                language_code: "en"
             }
         })
             .then((response) => {
-                const movieInfo = {
-                    title: response.data.results[0].title,
-                    id: response.data.results[0].id,
-                    poster: response.data.results[0].image.url,
-                    actors: response.data.results[0].principals
-                };
-
-                const updatedActors = tallyActors(
-                    actors,
-                    movieInfo.actors,
-                    movieInfo.id
-                );
-
-                setList((prevState) => [...prevState, movieInfo]);
-                setActors(updatedActors);
-                setQuery("");
+                setQueryResults(response.data.results);
             })
             .catch((error) => {
                 console.log(error);
             });
+    }
+
+    function addMovie(data) {
+        const movieInfo = {
+            title: data.title,
+            id: data.id,
+            poster: data.image.url,
+            actors: data.principals
+        };
+
+        const updatedActors = tallyActors(
+            actors,
+            movieInfo.actors,
+            movieInfo.id
+        );
+
+        setList((prevState) => [...prevState, movieInfo]);
+        setActors(updatedActors);
+        setQuery("");
     }
 
     function removeMovie(id, removedActors) {
@@ -125,12 +127,12 @@ function App() {
             <Router>
                 <MovieColumn
                     addMovie={addMovie}
-                    query={query}
                     setQuery={setQuery}
                     removeMovie={removeMovie}
                     myList={myList}
                     setList={setList}
                     path="/"
+                    queryResults={queryResults}
                 />
                 <Button path="to-watch" />
             </Router>
