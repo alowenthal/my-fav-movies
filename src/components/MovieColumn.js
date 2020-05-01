@@ -15,6 +15,7 @@ const MovieList = styled.div`
 function MovieColumn({
     addTitle,
     query,
+    searchQuery,
     setQuery,
     removeTitle,
     list,
@@ -50,6 +51,7 @@ function MovieColumn({
             <MovieSearch
                 addTitle={addTitle}
                 query={query}
+                searchQuery={searchQuery}
                 setQuery={setQuery}
                 queryResults={queryResults}
                 type={type}
@@ -81,6 +83,7 @@ function MovieColumn({
 
 MovieColumn.propTypes = {
     addTitle: PropTypes.func,
+    searchQuery: PropTypes.string,
     query: PropTypes.string,
     setQuery: PropTypes.func,
     list: PropTypes.array,

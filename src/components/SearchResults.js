@@ -24,23 +24,37 @@ const Result = styled.a`
     }
 `;
 
-function SearchResults({ queryResults, addTitle }) {
+const Spinner = styled.div`
+    padding: 1rem;
+    color: #333;
+`;
+
+function SearchResults({ searchQuery, queryResults, addTitle, focus }) {
     return (
         <Results>
-            {queryResults.map((result) => {
-                if (result.title) {
-                    return (
-                        <Result onClick={() => addTitle(result)}>
-                            {result.title}
-                        </Result>
-                    );
-                }
-            })}
+            {queryResults ? (
+                queryResults.map((result) => {
+                    if (result.title) {
+                        return (
+                            <>
+                                {queryResults && focus && (
+                                    <Result onClick={() => addTitle(result)}>
+                                        {result.title}
+                                    </Result>
+                                )}
+                            </>
+                        );
+                    }
+                })
+            ) : (
+                <>{searchQuery !== "" && <Spinner>...</Spinner>}</>
+            )}
         </Results>
     );
 }
 
 SearchResults.propTypes = {
+    searchQuery: PropTypes.string,
     queryResults: PropTypes.array,
     addTitle: PropTypes.func
 };

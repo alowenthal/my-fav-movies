@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import PropTypes from "prop-types";
 import { DebounceInput } from "react-debounce-input";
@@ -24,8 +24,11 @@ const TypeaheadContainer = styled.div`
     }
 `;
 
-function MovieSearch({ query, setQuery, addTitle, queryResults, type }) {
+function MovieSearch({ setQuery, searchQuery, addTitle, queryResults, type }) {
+    const [focus, setFocus] = useState(false);
+
     function keyPress(e) {
+        console.log("*** it happened");
         if (e.keyCode === 13) {
             addTitle(e.target.value);
         }
@@ -39,21 +42,22 @@ function MovieSearch({ query, setQuery, addTitle, queryResults, type }) {
                     onChange={(e) => setQuery(e.target.value)}
                     className="search-input"
                     placeholder={`Search a ${type}...`}
+                    onBlur={() => setFocus(false)}
+                    onFocus={() => setFocus(true)}
                 />
-                {queryResults && (
-                    <SearchResults
-                        query={query}
-                        queryResults={queryResults}
-                        addTitle={addTitle}
-                    />
-                )}
+                <SearchResults
+                    searchQuery={searchQuery}
+                    queryResults={queryResults}
+                    addTitle={addTitle}
+                    focus={focus}
+                />
             </TypeaheadContainer>
         </SearchContainer>
     );
 }
 
 MovieSearch.propTypes = {
-    query: PropTypes.string,
+    searchQuery: PropTypes.string,
     setQuery: PropTypes.func,
     addTitle: PropTypes.func,
     type: PropTypes.string,

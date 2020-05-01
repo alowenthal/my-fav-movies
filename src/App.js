@@ -14,6 +14,7 @@ import { testData, testActors } from "./TestData/testList.js";
 const isTestMode = false;
 
 function App() {
+    const [searchQuery, setSearchQuery] = useState("");
     const [queryResults, setQueryResults] = useState([]);
     const [localStorageMovieList, setLocalStorageMovieList] = useLocalStorage(
         "movieList",
@@ -63,6 +64,7 @@ function App() {
     });
 
     function setQuery(query) {
+        setSearchQuery(query);
         axios({
             method: "GET",
             url: `https://imdb8.p.rapidapi.com/title/find?q=${query}`,
@@ -157,6 +159,7 @@ function App() {
             <Router>
                 <MovieColumn
                     addTitle={addTitle}
+                    searchQuery={searchQuery}
                     setQuery={setQuery}
                     removeTitle={removeTitle}
                     list={movieList}
@@ -167,6 +170,7 @@ function App() {
                 />
                 <MovieColumn
                     addTitle={addTitle}
+                    searchQuery={searchQuery}
                     setQuery={setQuery}
                     removeTitle={removeTitle}
                     list={showList}
