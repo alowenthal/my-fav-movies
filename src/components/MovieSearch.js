@@ -3,7 +3,6 @@ import styled from "styled-components";
 import PropTypes from "prop-types";
 import { DebounceInput } from "react-debounce-input";
 
-import Button from "./Button";
 import SearchResults from "./SearchResults";
 
 const SearchContainer = styled.div`
@@ -41,11 +40,13 @@ function MovieSearch({ query, setQuery, addTitle, queryResults, type }) {
                     className="search-input"
                     placeholder={`Search a ${type}...`}
                 />
-                <SearchResults
-                    query={query}
-                    queryResults={queryResults}
-                    addTitle={addTitle}
-                />
+                {queryResults && (
+                    <SearchResults
+                        query={query}
+                        queryResults={queryResults}
+                        addTitle={addTitle}
+                    />
+                )}
             </TypeaheadContainer>
         </SearchContainer>
     );
@@ -55,7 +56,8 @@ MovieSearch.propTypes = {
     query: PropTypes.string,
     setQuery: PropTypes.func,
     addTitle: PropTypes.func,
-    type: PropTypes.string
+    type: PropTypes.string,
+    queryResults: PropTypes.array
 };
 
 export default MovieSearch;

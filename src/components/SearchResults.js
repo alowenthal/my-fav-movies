@@ -26,21 +26,17 @@ const Result = styled.a`
 
 function SearchResults({ queryResults, addTitle }) {
     return (
-        <>
-            {queryResults && (
-                <Results>
-                    {queryResults.map((result) => {
-                        if (result.title) {
-                            return (
-                                <Result onClick={() => addTitle(result)}>
-                                    {result.title}
-                                </Result>
-                            );
-                        }
-                    })}
-                </Results>
-            )}
-        </>
+        <Results>
+            {queryResults.map((result) => {
+                if (result.title) {
+                    return (
+                        <Result onClick={() => addTitle(result)}>
+                            {result.title}
+                        </Result>
+                    );
+                }
+            })}
+        </Results>
     );
 }
 
