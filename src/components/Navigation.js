@@ -22,7 +22,10 @@ function Navigation() {
         <>
             <Nav>
                 <Link className="nav-item" to="/">
-                    Favorites
+                    Movies
+                </Link>
+                <Link className="nav-item" to="/shows">
+                    Shows
                 </Link>
                 <Link className="nav-item" to="/to-watch">
                     + To Watch

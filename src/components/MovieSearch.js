@@ -25,10 +25,10 @@ const TypeaheadContainer = styled.div`
     }
 `;
 
-function MovieSearch({ query, setQuery, addMovie, queryResults }) {
+function MovieSearch({ query, setQuery, addTitle, queryResults, type }) {
     function keyPress(e) {
         if (e.keyCode === 13) {
-            addMovie(e.target.value);
+            addTitle(e.target.value);
         }
     }
     return (
@@ -39,12 +39,12 @@ function MovieSearch({ query, setQuery, addMovie, queryResults }) {
                     debounceTimeout={300}
                     onChange={(e) => setQuery(e.target.value)}
                     className="search-input"
-                    placeholder="Search a movie..."
+                    placeholder={`Search a ${type}...`}
                 />
                 <SearchResults
                     query={query}
                     queryResults={queryResults}
-                    addMovie={addMovie}
+                    addTitle={addTitle}
                 />
             </TypeaheadContainer>
         </SearchContainer>
@@ -54,7 +54,8 @@ function MovieSearch({ query, setQuery, addMovie, queryResults }) {
 MovieSearch.propTypes = {
     query: PropTypes.string,
     setQuery: PropTypes.func,
-    addMovie: PropTypes.func
+    addTitle: PropTypes.func,
+    type: PropTypes.string
 };
 
 export default MovieSearch;

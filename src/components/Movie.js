@@ -39,7 +39,7 @@ const MovieTitle = styled.span`
     font-weight: 600;
 `;
 
-function Movie({ movie, index, removeMovie }) {
+function Movie({ movie, index, removeTitle }) {
     return (
         <Draggable draggableId={JSON.stringify(movie)} index={index}>
             {(provided) => (
@@ -57,7 +57,7 @@ function Movie({ movie, index, removeMovie }) {
                     />
                     <MovieTitle>{movie.title}</MovieTitle>
                     <Button
-                        func={() => removeMovie(movie.id, movie.actors)}
+                        func={() => removeTitle(movie.id, movie.actors)}
                         type="button"
                         bgColor="none"
                         borderColor="#ffffff"
@@ -73,7 +73,7 @@ function Movie({ movie, index, removeMovie }) {
 Movie.propTypes = {
     movie: PropTypes.array,
     index: PropTypes.number,
-    removeMovie: PropTypes.func
+    removeTitle: PropTypes.func
 };
 
 export default Movie;

@@ -1,3 +1,4 @@
+/* eslint-disable no-eval */
 /* eslint-disable no-nested-ternary */
 import React, { useState, useEffect } from "react";
 import axios from "axios";
@@ -9,36 +10,55 @@ import Navigation from "./components/Navigation";
 import MovieColumn from "./components/MovieColumn";
 import { testData, testActors } from "./TestData/testList.js";
 
-import Button from "./components/Button";
-
 // Should only be true for DEV purposes
 const isTestMode = false;
 
 function App() {
     const [queryResults, setQueryResults] = useState([]);
-    const [lsList, setlsList] = useLocalStorage("myList", "");
-    const [lsActors, setlsActors] = useLocalStorage("actors", "");
-
-    const [myList, setList] = useState(
-        isTestMode ? [...testData] : lsList ? [...JSON.parse(lsList)] : []
+    const [localStorageMovieList, setLocalStorageMovieList] = useLocalStorage(
+        "movieList",
+        ""
+    );
+    const [localStorageShowList, setLocalStorageShowList] = useLocalStorage(
+        "showList",
+        ""
+    );
+    const [localStorageActors, setLocalStorageActors] = useLocalStorage(
+        "actors",
+        ""
+    );
+    const [movieList, setMovieList] = useState(
+        isTestMode
+            ? [...testData]
+            : localStorageMovieList
+            ? [...JSON.parse(localStorageMovieList)]
+            : []
+    );
+    const [showList, setShowList] = useState(
+        isTestMode
+            ? [...testData]
+            : localStorageShowList
+            ? [...JSON.parse(localStorageShowList)]
+            : []
     );
     const [actors, setActors] = useState(
         isTestMode
             ? { ...testActors }
-            : lsActors
-            ? { ...JSON.parse(lsActors) }
+            : localStorageActors
+            ? { ...JSON.parse(localStorageActors) }
             : {}
     );
 
     useEffect(() => {
-        setlsList(JSON.stringify(myList));
-        setlsActors(JSON.stringify(actors));
-    }, [myList]);
+        setLocalStorageMovieList(JSON.stringify(movieList));
+        setLocalStorageShowList(JSON.stringify(showList));
+        setLocalStorageActors(JSON.stringify(actors));
+    }, [movieList, showList]);
 
     const actorsArr = Object.keys(actors).map((actor) => {
         return {
             actor,
-            movies: actors[actor]
+            titles: actors[actor]
         };
     });
 
@@ -60,40 +80,50 @@ function App() {
             });
     }
 
-    function addMovie(data) {
-        const movieInfo = {
+    function addTitle(data) {
+        const titleInfo = {
             title: data.title,
             id: data.id,
             poster: data.image.url,
-            actors: data.principals
+            actors: data.principals,
+            type: data.titleType
         };
 
         const updatedActors = tallyActors(
             actors,
-            movieInfo.actors,
-            movieInfo.id
+            titleInfo.actors,
+            titleInfo.id
         );
 
-        setList((prevState) => [...prevState, movieInfo]);
+        if (data.titleType === "movie") {
+            setMovieList((prevState) => [...prevState, titleInfo]);
+        } else {
+            setShowList((prevState) => [...prevState, titleInfo]);
+        }
+
         setActors(updatedActors);
         setQuery("");
     }
 
-    function removeMovie(id, removedActors) {
+    function removeTitle(id, removedActors, type) {
+        const sanatizedType =
+            type === "movie"
+                ? { state: "movieList", setter: "setMovieList" }
+                : { state: "showList", setter: "setShowList" };
         const removeIndex = isTestMode
             ? testData
-            : myList
+            : eval(sanatizedType.state)
                   .map((item) => {
                       return item.id;
                   })
                   .indexOf(id);
 
         // remove object
-        myList.splice(removeIndex, 1);
+        eval(sanatizedType.state).splice(removeIndex, 1);
 
         const updatedActors = unTallyActors(actors, removedActors, id);
 
-        setList([...myList]);
+        eval(sanatizedType.setter)([...eval(sanatizedType.state)]);
         setActors(updatedActors);
     }
 
@@ -126,15 +156,25 @@ function App() {
             <Navigation />
             <Router>
                 <MovieColumn
-                    addMovie={addMovie}
+                    addTitle={addTitle}
                     setQuery={setQuery}
-                    removeMovie={removeMovie}
-                    myList={myList}
-                    setList={setList}
+                    removeTitle={removeTitle}
+                    list={movieList}
+                    setList={setMovieList}
                     path="/"
                     queryResults={queryResults}
+                    type="movie"
                 />
-                <Button path="to-watch" />
+                <MovieColumn
+                    addTitle={addTitle}
+                    setQuery={setQuery}
+                    removeTitle={removeTitle}
+                    list={showList}
+                    setList={setShowList}
+                    path="shows"
+                    queryResults={queryResults}
+                    type="show"
+                />
             </Router>
         </div>
     );

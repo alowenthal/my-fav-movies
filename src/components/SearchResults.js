@@ -23,7 +23,7 @@ const Result = styled.a`
     }
 `;
 
-function SearchResults({ query, queryResults, addMovie }) {
+function SearchResults({ query, queryResults, addTitle }) {
     return (
         <>
             {queryResults && (
@@ -31,7 +31,7 @@ function SearchResults({ query, queryResults, addMovie }) {
                     {queryResults.map((result) => {
                         if (result.title) {
                             return (
-                                <Result onClick={() => addMovie(result)}>
+                                <Result onClick={() => addTitle(result)}>
                                     {result.title}
                                 </Result>
                             );

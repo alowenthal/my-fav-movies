@@ -13,13 +13,14 @@ const MovieList = styled.div`
 `;
 
 function MovieColumn({
-    addMovie,
+    addTitle,
     query,
     setQuery,
-    removeMovie,
-    myList,
+    removeTitle,
+    list,
     setList,
-    queryResults
+    queryResults,
+    type
 }) {
     function onDragEnd(result) {
         const { destination, source, draggableId } = result;
@@ -36,7 +37,7 @@ function MovieColumn({
             return;
         }
 
-        const updatedList = myList;
+        const updatedList = list;
 
         updatedList.splice(source.index, 1);
         updatedList.splice(destination.index, 0, JSON.parse(draggableId));
@@ -47,10 +48,11 @@ function MovieColumn({
     return (
         <>
             <MovieSearch
-                addMovie={addMovie}
+                addTitle={addTitle}
                 query={query}
                 setQuery={setQuery}
                 queryResults={queryResults}
+                type={type}
             />
             <DragDropContext onDragEnd={onDragEnd}>
                 <Droppable droppableId="movie-list">
@@ -59,11 +61,11 @@ function MovieColumn({
                             ref={provided.innerRef}
                             {...provided.droppableProps}
                         >
-                            {myList.map((movie, index) => (
+                            {list.map((movie, index) => (
                                 <Movie
                                     movie={movie}
                                     index={index}
-                                    removeMovie={removeMovie}
+                                    removeTitle={removeTitle}
                                     key={JSON.stringify(movie)}
                                 />
                             ))}
@@ -77,12 +79,14 @@ function MovieColumn({
 }
 
 MovieColumn.propTypes = {
-    addMovie: PropTypes.func,
+    addTitle: PropTypes.func,
     query: PropTypes.string,
     setQuery: PropTypes.func,
-    myList: PropTypes.array,
+    list: PropTypes.array,
     setList: PropTypes.func,
-    removeMovie: PropTypes.func
+    removeTitle: PropTypes.func,
+    queryResults: PropTypes.array,
+    type: PropTypes.string
 };
 
 export default MovieColumn;
