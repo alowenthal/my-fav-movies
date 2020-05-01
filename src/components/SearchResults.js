@@ -20,10 +20,11 @@ const Result = styled.a`
 
     &:hover {
         background: #f1f1f1;
+        cursor: pointer;
     }
 `;
 
-function SearchResults({ query, queryResults, addTitle }) {
+function SearchResults({ queryResults, addTitle }) {
     return (
         <>
             {queryResults && (
@@ -44,8 +45,8 @@ function SearchResults({ query, queryResults, addTitle }) {
 }
 
 SearchResults.propTypes = {
-    query: PropTypes.string,
-    queryResults: PropTypes.array
+    queryResults: PropTypes.array,
+    addTitle: PropTypes.func
 };
 
 export default SearchResults;
