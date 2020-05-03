@@ -2,8 +2,11 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import PropTypes from "prop-types";
 import { DebounceInput } from "react-debounce-input";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTimes } from "@fortawesome/free-solid-svg-icons";
 
 import SearchResults from "./SearchResults";
+import Button from "./Button";
 
 const SearchContainer = styled.div`
     padding: 1rem;
@@ -13,6 +16,8 @@ const SearchContainer = styled.div`
 const TypeaheadContainer = styled.div`
     position: relative;
     max-width: 400px;
+    display: flex;
+    align-items: center;
 
     .search-input {
         list-style: none;
@@ -24,15 +29,21 @@ const TypeaheadContainer = styled.div`
     }
 `;
 
-function MovieSearch({ setQuery, searchQuery, addTitle, queryResults, type }) {
-    const [focus, setFocus] = useState(false);
+const CloseButton = styled.button`
+    position: absolute;
+    right: 0rem;
+    background: none;
+    border: none;
+    padding: 1rem;
+    font-size: 1rem;
+    color: #c8c8c8;
 
-    function keyPress(e) {
-        console.log("*** it happened");
-        if (e.keyCode === 13) {
-            addTitle(e.target.value);
-        }
+    &:hover {
+        cursor: pointer;
     }
+`;
+
+function MovieSearch({ setQuery, searchQuery, addTitle, queryResults, type }) {
     return (
         <SearchContainer>
             <TypeaheadContainer>
@@ -42,14 +53,22 @@ function MovieSearch({ setQuery, searchQuery, addTitle, queryResults, type }) {
                     onChange={(e) => setQuery(e.target.value)}
                     className="search-input"
                     placeholder={`Search a ${type}...`}
-                    onBlur={() => setFocus(false)}
-                    onFocus={() => setFocus(true)}
+                    value={searchQuery}
                 />
+                {searchQuery !== "" && (
+                    <CloseButton
+                        className="close"
+                        onClick={() => setQuery("")}
+                        type="button"
+                    >
+                        <FontAwesomeIcon icon={faTimes} />
+                    </CloseButton>
+                )}
                 <SearchResults
                     searchQuery={searchQuery}
                     queryResults={queryResults}
                     addTitle={addTitle}
-                    focus={focus}
+                    type={type}
                 />
             </TypeaheadContainer>
         </SearchContainer>

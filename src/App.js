@@ -14,6 +14,7 @@ import { testData, testActors } from "./TestData/testList.js";
 const isTestMode = false;
 
 function App() {
+    const [firstRun, setFirstRun] = useState(true);
     const [searchQuery, setSearchQuery] = useState("");
     const [queryResults, setQueryResults] = useState([]);
     const [localStorageMovieList, setLocalStorageMovieList] = useLocalStorage(
@@ -56,6 +57,29 @@ function App() {
         setLocalStorageActors(JSON.stringify(actors));
     }, [movieList, showList]);
 
+    useEffect(() => {
+        if (!firstRun && searchQuery !== "") {
+            axios({
+                method: "GET",
+                url: `https://imdb8.p.rapidapi.com/title/find?q=${searchQuery}`,
+                headers: {
+                    "content-type": "application/octet-stream",
+                    "x-rapidapi-host": "imdb8.p.rapidapi.com",
+                    "x-rapidapi-key": process.env.REACT_APP_API_KEY
+                }
+            })
+                .then((response) => {
+                    setQueryResults(response.data.results);
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+        } else if (searchQuery === "") {
+            setQueryResults([]);
+        }
+        setFirstRun(false);
+    }, [searchQuery]);
+
     const actorsArr = Object.keys(actors).map((actor) => {
         return {
             actor,
@@ -63,26 +87,9 @@ function App() {
         };
     });
 
-    function setQuery(query) {
-        setSearchQuery(query);
-        axios({
-            method: "GET",
-            url: `https://imdb8.p.rapidapi.com/title/find?q=${query}`,
-            headers: {
-                "content-type": "application/octet-stream",
-                "x-rapidapi-host": "imdb8.p.rapidapi.com",
-                "x-rapidapi-key": process.env.REACT_APP_API_KEY
-            }
-        })
-            .then((response) => {
-                setQueryResults(response.data.results);
-            })
-            .catch((error) => {
-                console.log(error);
-            });
-    }
+    function addTitle(event, data) {
+        event.stopPropagation();
 
-    function addTitle(data) {
         const titleInfo = {
             title: data.title,
             id: data.id,
@@ -104,7 +111,7 @@ function App() {
         }
 
         setActors(updatedActors);
-        setQuery("");
+        setSearchQuery("");
     }
 
     function removeTitle(id, removedActors, type) {
@@ -160,7 +167,7 @@ function App() {
                 <MovieColumn
                     addTitle={addTitle}
                     searchQuery={searchQuery}
-                    setQuery={setQuery}
+                    setQuery={setSearchQuery}
                     removeTitle={removeTitle}
                     list={movieList}
                     setList={setMovieList}
@@ -171,7 +178,7 @@ function App() {
                 <MovieColumn
                     addTitle={addTitle}
                     searchQuery={searchQuery}
-                    setQuery={setQuery}
+                    setQuery={setSearchQuery}
                     removeTitle={removeTitle}
                     list={showList}
                     setList={setShowList}
