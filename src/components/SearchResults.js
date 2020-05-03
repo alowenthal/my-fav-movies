@@ -1,6 +1,8 @@
 import React from "react";
 import styled from "styled-components";
 import PropTypes from "prop-types";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCheck } from "@fortawesome/free-solid-svg-icons";
 
 const Results = styled.div`
     background: #ffffff;
@@ -17,23 +19,19 @@ const Results = styled.div`
 const Result = styled.a`
     color: #000000;
     padding: 1rem;
-    display: flex;
-    flex-flow: row nowrap;
+    display: grid;
+    grid-template-columns: 12% auto 20%;
     align-items: center;
+    background: ${(props) => (props.inList ? "#78e08f" : "white")};
 
     &:hover {
-        background: #f1f1f1;
-        cursor: pointer;
+        background: ${(props) => (props.inList ? "#78e08f" : "#f1f1f1")};
+        cursor: ${(props) => (props.inList ? "inherit" : "pointer")};
     }
 `;
 
-const ResultPoster = styled.span`
+const ResultPoster = styled.img`
     max-width: 30px;
-    margin-right: 1rem;
-
-    img {
-        max-width: 30px;
-    }
 `;
 
 const ResultInfo = styled.span`
@@ -44,6 +42,7 @@ const ResultInfo = styled.span`
 const ResultTitle = styled.span`
     font-weight: 700;
     font-size: 1.125rem;
+    line-height: 1;
 `;
 
 const ResultActors = styled.span`
@@ -61,6 +60,31 @@ const ResultActors = styled.span`
                 margin-right: 0px;
             }
         }
+    }
+`;
+
+const ResultYear = styled.span`
+    font-size: 1rem;
+    text-align: right;
+    color: #c8c8c8;
+`;
+
+const ResultListPosition = styled.span`
+    display: flex;
+    flex-flow: column wrap;
+    text-align: center;
+    justify-self: end;
+
+    .result-inlist-position {
+        font-size: 1rem;
+        font-weight: 700;
+        line-height: 0.5;
+    }
+
+    .result-inlist-title {
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
     }
 `;
 
@@ -109,19 +133,22 @@ function SearchResults({ searchQuery, queryResults, addTitle }) {
                             <>
                                 {searchQuery && (
                                     <Result
-                                        onClick={(e) => addTitle(e, result)}
+                                        onClick={
+                                            result.inListPosition
+                                                ? ""
+                                                : (e) => addTitle(e, result)
+                                        }
+                                        inList={result.inListPosition}
                                     >
-                                        <ResultPoster>
-                                            <img
-                                                src={
-                                                    result.image
-                                                        ? result.image.url
-                                                        : "https://via.placeholder.com/100x124.png"
-                                                }
-                                                alt={`${result.title} Poster`}
-                                                onError="https://via.placeholder.com/100x124.png"
-                                            />
-                                        </ResultPoster>
+                                        <ResultPoster
+                                            src={
+                                                result.image
+                                                    ? result.image.url
+                                                    : "https://via.placeholder.com/100x124.png"
+                                            }
+                                            alt={`${result.title} Poster`}
+                                            onError="https://via.placeholder.com/100x124.png"
+                                        />
                                         <ResultInfo>
                                             <ResultTitle>
                                                 {result.title}
@@ -138,6 +165,18 @@ function SearchResults({ searchQuery, queryResults, addTitle }) {
                                                     : ""}
                                             </ResultActors>
                                         </ResultInfo>
+                                        {result.inListPosition ? (
+                                            <ResultListPosition>
+                                                <span className="result-inlist-position">{`${result.inListPosition}/${result.inListTotal}`}</span>
+                                                <span className="result-inlist-title">
+                                                    In my list
+                                                </span>
+                                            </ResultListPosition>
+                                        ) : (
+                                            <ResultYear>
+                                                {result.year}
+                                            </ResultYear>
+                                        )}
                                     </Result>
                                 )}
                             </>

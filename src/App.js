@@ -70,7 +70,6 @@ function App() {
                 }
             })
                 .then((response) => {
-                    console.log("***", mediaType);
                     const sanatizedResults =
                         mediaType === "movie"
                             ? response.data.results.filter(
@@ -79,6 +78,16 @@ function App() {
                             : response.data.results.filter(
                                   (result) => result.titleType !== "movie"
                               );
+                    sanatizedResults.forEach((result) => {
+                        eval(`${mediaType}List`).find((item, index) => {
+                            if (item.id === result.id) {
+                                result.inListPosition = index + 1;
+                                result.inListTotal = eval(
+                                    `${mediaType}List`
+                                ).length;
+                            }
+                        });
+                    });
                     setQueryResults(sanatizedResults);
                 })
                 .catch((error) => {
