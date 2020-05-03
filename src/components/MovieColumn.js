@@ -1,5 +1,5 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import React from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
 import PropTypes from "prop-types";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
@@ -21,8 +21,11 @@ function MovieColumn({
     list,
     setList,
     queryResults,
-    type
+    type,
+    setMediaType
 }) {
+    useEffect(() => setMediaType(type));
+
     function onDragEnd(result) {
         const { destination, source, draggableId } = result;
 
@@ -90,7 +93,8 @@ MovieColumn.propTypes = {
     setList: PropTypes.func,
     removeTitle: PropTypes.func,
     queryResults: PropTypes.array,
-    type: PropTypes.string
+    type: PropTypes.string,
+    setMediaType: PropTypes.func
 };
 
 export default MovieColumn;

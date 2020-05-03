@@ -17,6 +17,7 @@ function App() {
     const [firstRun, setFirstRun] = useState(true);
     const [searchQuery, setSearchQuery] = useState("");
     const [queryResults, setQueryResults] = useState([]);
+    const [mediaType, setMediaType] = useState("movie");
     const [localStorageMovieList, setLocalStorageMovieList] = useLocalStorage(
         "movieList",
         ""
@@ -69,7 +70,16 @@ function App() {
                 }
             })
                 .then((response) => {
-                    setQueryResults(response.data.results);
+                    console.log("***", mediaType);
+                    const sanatizedResults =
+                        mediaType === "movie"
+                            ? response.data.results.filter(
+                                  (result) => result.titleType === "movie"
+                              )
+                            : response.data.results.filter(
+                                  (result) => result.titleType !== "movie"
+                              );
+                    setQueryResults(sanatizedResults);
                 })
                 .catch((error) => {
                     console.log(error);
@@ -174,6 +184,7 @@ function App() {
                     path="/"
                     queryResults={queryResults}
                     type="movie"
+                    setMediaType={setMediaType}
                 />
                 <MovieColumn
                     addTitle={addTitle}
@@ -185,6 +196,7 @@ function App() {
                     path="shows"
                     queryResults={queryResults}
                     type="show"
+                    setMediaType={setMediaType}
                 />
             </Router>
         </div>
