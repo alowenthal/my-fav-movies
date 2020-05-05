@@ -52,7 +52,9 @@ function MovieSearch({ setQuery, searchQuery, addTitle, queryResults, type }) {
                     debounceTimeout={300}
                     onChange={(e) => setQuery(e.target.value)}
                     className="search-input"
-                    placeholder={`Search a ${type}...`}
+                    placeholder={`Search a ${
+                        type === "toWatch" ? "movie or show" : type
+                    }...`}
                     value={searchQuery}
                 />
                 {searchQuery !== "" && (

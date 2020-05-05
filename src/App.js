@@ -26,6 +26,10 @@ function App() {
         "showList",
         ""
     );
+    const [
+        localStorageToWatchList,
+        setLocalStorageToWatchList
+    ] = useLocalStorage("toWatchList", "");
     const [localStorageActors, setLocalStorageActors] = useLocalStorage(
         "actors",
         ""
@@ -44,6 +48,13 @@ function App() {
             ? [...JSON.parse(localStorageShowList)]
             : []
     );
+    const [toWatchList, setToWatchList] = useState(
+        isTestMode
+            ? [...testData]
+            : localStorageToWatchList
+            ? [...JSON.parse(localStorageToWatchList)]
+            : []
+    );
     const [actors, setActors] = useState(
         isTestMode
             ? { ...testActors }
@@ -55,8 +66,9 @@ function App() {
     useEffect(() => {
         setLocalStorageMovieList(JSON.stringify(movieList));
         setLocalStorageShowList(JSON.stringify(showList));
+        setLocalStorageToWatchList(JSON.stringify(toWatchList));
         setLocalStorageActors(JSON.stringify(actors));
-    }, [movieList, showList]);
+    }, [movieList, showList, toWatchList]);
 
     useEffect(() => {
         if (!firstRun && searchQuery !== "") {
@@ -70,15 +82,22 @@ function App() {
                 }
             })
                 .then((response) => {
-                    const sanatizedResults =
-                        mediaType === "movie"
-                            ? response.data.results.filter(
-                                  (result) => result.titleType === "movie"
-                              )
-                            : response.data.results.filter(
-                                  (result) => result.titleType !== "movie"
-                              );
-                    sanatizedResults.forEach((result) => {
+                    let sanitizedResults;
+                    switch (mediaType) {
+                        case "movie":
+                            sanitizedResults = response.data.results.filter(
+                                (result) => result.titleType === "movie"
+                            );
+                            break;
+                        case "show":
+                            sanitizedResults = response.data.results.filter(
+                                (result) => result.titleType !== "movie"
+                            );
+                            break;
+                        default:
+                            sanitizedResults = response.data.results;
+                    }
+                    sanitizedResults.forEach((result) => {
                         eval(`${mediaType}List`).find((item, index) => {
                             if (item.id === result.id) {
                                 result.inListPosition = index + 1;
@@ -88,7 +107,7 @@ function App() {
                             }
                         });
                     });
-                    setQueryResults(sanatizedResults);
+                    setQueryResults(sanitizedResults);
                 })
                 .catch((error) => {
                     console.log(error);
@@ -117,42 +136,65 @@ function App() {
             type: data.titleType
         };
 
-        const updatedActors = tallyActors(
-            actors,
-            titleInfo.actors,
-            titleInfo.id
-        );
+        if (mediaType !== "toWatch") {
+            const updatedActors = tallyActors(
+                actors,
+                titleInfo.actors,
+                titleInfo.id
+            );
 
-        if (data.titleType === "movie") {
-            setMovieList((prevState) => [...prevState, titleInfo]);
+            if (data.titleType === "movie") {
+                setMovieList((prevState) => [...prevState, titleInfo]);
+            } else {
+                setShowList((prevState) => [...prevState, titleInfo]);
+            }
+
+            setActors(updatedActors);
         } else {
-            setShowList((prevState) => [...prevState, titleInfo]);
+            setToWatchList((prevState) => [...prevState, titleInfo]);
         }
 
-        setActors(updatedActors);
         setSearchQuery("");
     }
 
     function removeTitle(id, removedActors, type) {
-        const sanatizedType =
-            type === "movie"
-                ? { state: "movieList", setter: "setMovieList" }
-                : { state: "showList", setter: "setShowList" };
+        let sanitizedType;
+        switch (type) {
+            case "movie":
+                sanitizedType = {
+                    state: "movieList",
+                    setter: "setMovieList"
+                };
+                break;
+            case "show":
+                sanitizedType = {
+                    state: "showList",
+                    setter: "setShowList"
+                };
+                break;
+            default:
+                sanitizedType = {
+                    state: "toWatchList",
+                    setter: "setToWatchList"
+                };
+        }
+
         const removeIndex = isTestMode
             ? testData
-            : eval(sanatizedType.state)
+            : eval(sanitizedType.state)
                   .map((item) => {
                       return item.id;
                   })
                   .indexOf(id);
 
-        // remove object
-        eval(sanatizedType.state).splice(removeIndex, 1);
+        eval(sanitizedType.state).splice(removeIndex, 1);
 
-        const updatedActors = unTallyActors(actors, removedActors, id);
+        eval(sanitizedType.setter)([...eval(sanitizedType.state)]);
 
-        eval(sanatizedType.setter)([...eval(sanatizedType.state)]);
-        setActors(updatedActors);
+        if (mediaType !== "toWatch") {
+            const updatedActors = unTallyActors(actors, removedActors, id);
+            setActors(updatedActors);
+        }
     }
 
     function tallyActors(currentActors, newActors, id) {
@@ -205,6 +247,18 @@ function App() {
                     path="shows"
                     queryResults={queryResults}
                     type="show"
+                    setMediaType={setMediaType}
+                />
+                <MovieColumn
+                    addTitle={addTitle}
+                    searchQuery={searchQuery}
+                    setQuery={setSearchQuery}
+                    removeTitle={removeTitle}
+                    list={toWatchList}
+                    setList={setToWatchList}
+                    path="to-watch"
+                    queryResults={queryResults}
+                    type="toWatch"
                     setMediaType={setMediaType}
                 />
             </Router>
