@@ -7,6 +7,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import { isMobile } from "react-device-detect";
 
+import MarkWatched from "./MarkWatched";
+
 import Button from "./Button";
 
 const MovieItem = styled.div`
@@ -14,8 +16,8 @@ const MovieItem = styled.div`
     border-bottom: 1px solid #222222;
     display: grid;
     grid-template-columns: ${isMobile
-        ? `30px 86px auto 30px`
-        : `100px 100px auto 100px`};
+        ? `30px 86px auto 40px 40px`
+        : `100px 100px auto 225px 100px`};
     align-items: center;
 
     img {
@@ -39,7 +41,7 @@ const MovieTitle = styled.span`
     font-weight: 600;
 `;
 
-function Movie({ movie, index, removeTitle, type }) {
+function Movie({ movie, index, removeTitle, type, addTitle }) {
     return (
         <Draggable draggableId={JSON.stringify(movie)} index={index}>
             {(provided) => (
@@ -56,6 +58,14 @@ function Movie({ movie, index, removeTitle, type }) {
                         alt={`${movie.title} Poster`}
                     />
                     <MovieTitle>{movie.title}</MovieTitle>
+                    {type === "toWatch" && (
+                        <MarkWatched
+                            addTitle={addTitle}
+                            data={movie}
+                            removeTitle={removeTitle}
+                            type={type}
+                        />
+                    )}
                     <Button
                         func={() => removeTitle(movie.id, movie.actors, type)}
                         type="button"
@@ -74,7 +84,8 @@ Movie.propTypes = {
     movie: PropTypes.array,
     index: PropTypes.number,
     removeTitle: PropTypes.func,
-    type: PropTypes.string
+    type: PropTypes.string,
+    addTitle: PropTypes.func
 };
 
 export default Movie;

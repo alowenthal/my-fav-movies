@@ -126,24 +126,30 @@ function App() {
     });
 
     function addTitle(event, data) {
-        event.stopPropagation();
+        let titleInfo;
 
-        const titleInfo = {
-            title: data.title,
-            id: data.id,
-            poster: data.image.url,
-            actors: data.principals,
-            type: data.titleType
-        };
+        if (event) {
+            event.stopPropagation();
 
-        if (mediaType !== "toWatch") {
+            titleInfo = {
+                title: data.title,
+                id: data.id,
+                poster: data.image.url,
+                actors: data.principals,
+                type: data.titleType
+            };
+        } else {
+            titleInfo = data;
+        }
+
+        if (mediaType !== "toWatch" || !event) {
             const updatedActors = tallyActors(
                 actors,
                 titleInfo.actors,
                 titleInfo.id
             );
 
-            if (data.titleType === "movie") {
+            if (titleInfo.type === "movie") {
                 setMovieList((prevState) => [...prevState, titleInfo]);
             } else {
                 setShowList((prevState) => [...prevState, titleInfo]);
@@ -158,6 +164,7 @@ function App() {
     }
 
     function removeTitle(id, removedActors, type) {
+        console.log("***", id, removedActors, type);
         let sanitizedType;
         switch (type) {
             case "movie":

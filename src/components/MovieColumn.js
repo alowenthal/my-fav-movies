@@ -73,6 +73,7 @@ function MovieColumn({
                                     removeTitle={removeTitle}
                                     key={JSON.stringify(movie)}
                                     type={type}
+                                    addTitle={addTitle}
                                 />
                             ))}
                             {provided.placeholder}
