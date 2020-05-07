@@ -14,6 +14,7 @@ const Results = styled.div`
     max-height: 300px;
     overflow-y: scroll;
     top: 55px;
+    z-index: 100;
 `;
 
 const Result = styled.a`
