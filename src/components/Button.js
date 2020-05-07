@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import PropTypes from "prop-types";
 
-function Button({ text, func, bgColor, textColor, isDisabled }) {
+function Button({ text, func, bgColor, textColor, isDisabled, cName }) {
     const Btn = styled.button`
         background: ${bgColor};
         color: ${textColor};
@@ -19,7 +19,12 @@ function Button({ text, func, bgColor, textColor, isDisabled }) {
     `;
 
     return (
-        <Btn onClick={func} type="button" disabled={isDisabled}>
+        <Btn
+            onClick={func}
+            type="button"
+            disabled={isDisabled}
+            className={cName}
+        >
             {text}
         </Btn>
     );
@@ -30,7 +35,8 @@ Button.propTypes = {
     bgColor: PropTypes.string,
     textColor: PropTypes.string,
     func: PropTypes.func,
-    isDisabled: PropTypes.bool
+    isDisabled: PropTypes.bool,
+    cName: PropTypes.string
 };
 
 export default Button;

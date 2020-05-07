@@ -14,7 +14,6 @@
     "classnames": "^2.2.6",
     "dotenv": "^8.2.0",
     "firebase": "^7.14.2",
-    "framer-motion": "^1.10.3",
     "lodash.debounce": "^4.0.8",
     "prop-types": "^15.7.2",
     "react": "^16.13.1",
@@ -23,6 +22,7 @@
     "react-device-detect": "^1.12.0",
     "react-dom": "^16.13.1",
     "react-scripts": "3.4.1",
+    "react-toggle-button": "^2.2.0",
     "react-use-localstorage": "^3.4.1",
     "styled-components": "^5.1.0"
   },

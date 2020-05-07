@@ -16,8 +16,8 @@ const MovieItem = styled.div`
     border-bottom: 1px solid #222222;
     display: grid;
     grid-template-columns: ${isMobile
-        ? `30px 86px auto 40px 40px`
-        : `100px 100px auto 225px 100px`};
+        ? `30px 86px auto 40px`
+        : `100px 100px auto 100px 225px`};
     align-items: center;
 
     img {
@@ -58,6 +58,15 @@ function Movie({ movie, index, removeTitle, type, addTitle }) {
                         alt={`${movie.title} Poster`}
                     />
                     <MovieTitle>{movie.title}</MovieTitle>
+                    <Button
+                        func={() => removeTitle(movie.id, movie.actors, type)}
+                        type="button"
+                        bgColor="none"
+                        borderColor="#ffffff"
+                        textColor="#ffffff"
+                        cName="remove__title"
+                        text={<FontAwesomeIcon icon={faTimes} />}
+                    />
                     {type === "toWatch" && (
                         <MarkWatched
                             addTitle={addTitle}
@@ -66,14 +75,6 @@ function Movie({ movie, index, removeTitle, type, addTitle }) {
                             type={type}
                         />
                     )}
-                    <Button
-                        func={() => removeTitle(movie.id, movie.actors, type)}
-                        type="button"
-                        bgColor="none"
-                        borderColor="#ffffff"
-                        textColor="#ffffff"
-                        text={<FontAwesomeIcon icon={faTimes} />}
-                    />
                 </MovieItem>
             )}
         </Draggable>
